@@ -1,6 +1,7 @@
 package com.didispace.chapter1;
 
 import com.didispace.chapter1.domain.User;
+import com.didispace.chapter1.mapper.UserMapper;
 import com.didispace.chapter1.service.UserService;
 import com.didispace.chapter1.web.HelloController;
 import com.didispace.chapter1.web.UserController;
@@ -11,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -30,6 +32,8 @@ public class Chapter1ApplicationTests {
     private MockMvc mvc;
     @Autowired
     private UserService userService;
+    @Autowired
+    private UserMapper userMapper;
 
     @Before
     public void setUp() throws Exception {
@@ -101,10 +105,6 @@ public class Chapter1ApplicationTests {
     public void testUserService() throws Exception {
         // 插入5个用户
         userService.create("Tom", 10);
-        userService.create("Mike", 11);
-        userService.create("Didispace", 30);
-        userService.create("Oscar", 21);
-        userService.create("Linda", 17);
 
         // 查询id为1的用户，判断年龄是否匹配
         //User user = userService.getById(1L);
@@ -114,6 +114,14 @@ public class Chapter1ApplicationTests {
         //userService.deleteById(2L);
         //userService.deleteById(3L);
 
+    }
+
+    @Test
+    @Rollback
+    public void test() throws Exception {
+        userMapper.insert("AAA", 20);
+        com.didispace.chapter1.entity.User u = userMapper.findByName("AAA");
+        Assert.assertEquals(20, u.getAge().intValue());
     }
 
 }
