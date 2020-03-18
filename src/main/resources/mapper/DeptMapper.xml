@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.didispace.chapter1.mapper.DeptMapper">
+    <!--
+    int insert(Integer deptNo, String deptName, String deptDesc);
+    void delete(Integer deptNo);
+    void update(Dept dept);
+    List<Dept> findAll();
+    Dept findByNo(Integer deptNo);
+    Dept findByName(String deptName);
+    -->
+    <select id="findAll" resultType="com.didispace.chapter1.entity.Dept">
+        SELECT * FROM Dept
+    </select>
+    <select id="findByNo" resultType="com.didispace.chapter1.entity.Dept">
+        SELECT * FROM Dept WHERE deptNo = #{deptNo}
+    </select>
+    <select id="findByName" resultType="com.didispace.chapter1.entity.Dept">
+        SELECT * FROM Dept WHERE deptName = #{deptName}
+    </select>
+
+    <insert id="insert">
+        INSERT INTO Dept(deptNo, deptName, deptDesc) VALUES(#{deptNo}, #{deptName}, #{deptDesc})
+    </insert>
+
+    <delete id="delete">
+        DELETE FROM Dept WHERE deptNo = #{deptNo}
+    </delete>
+
+    <update id="update">
+        UPDATE Dept SET deptName = #{deptName}, deptDesc = #{deptDesc} WHERE deptNo = #{deptNo}
+    </update>
+</mapper>

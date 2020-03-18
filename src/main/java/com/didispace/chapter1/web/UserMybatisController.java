@@ -63,12 +63,12 @@ public class UserMybatisController {
      */
     @ApiOperation(value = "删除所有用户")
     @PostMapping("/delAll/")
-    public String deleteAllUser(@RequestParam String yes) {
+    public String deleteAllUser(@RequestParam String yes) throws Exception {
         if(yes.equals("1")) {
             userMapper.deleteAll();
             return "yes";
         } else {
-            return "no";
+            throw new Exception("暗号不对，无法删除");
         }
     }
 
