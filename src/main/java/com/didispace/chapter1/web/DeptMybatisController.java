@@ -4,6 +4,8 @@ import com.didispace.chapter1.entity.Dept;
 import com.didispace.chapter1.mapper.DeptMapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -16,9 +18,11 @@ import java.util.Map;
 public class DeptMybatisController {
 
     private DeptMapper deptMapper;
+    private StringRedisTemplate stringRedisTemplate;
 
-    public DeptMybatisController(DeptMapper deptMapper) {
+    public DeptMybatisController(DeptMapper deptMapper, StringRedisTemplate stringRedisTemplate) {
         this.deptMapper = deptMapper;
+        this.stringRedisTemplate = stringRedisTemplate;
     }
 
     /**
@@ -45,6 +49,24 @@ public class DeptMybatisController {
         // Dept d = new Dept(dept.getDeptName(),dept.getDeptDesc());
         int ret = deptMapper.insert(dept.getDeptNo(), dept.getDeptName(), dept.getDeptDesc());
         return Integer.toString(ret);
+    }
+
+    /**
+     * 获取创建部门次数
+     * @return
+     */
+    @ApiOperation(value = "测试redis变量更新", notes = "测试redis")
+    @GetMapping("/getCreateCount/")
+    public String getCreateCount() {
+        // 从Redis获取创建次数
+        String keyName = "creatCount";
+        if(!stringRedisTemplate.hasKey(keyName)) {
+            stringRedisTemplate.opsForValue().set(keyName, "0");
+        }
+        Integer count = Integer.parseInt(stringRedisTemplate.opsForValue().get(keyName));
+        count++;
+        stringRedisTemplate.opsForValue().set(keyName, count.toString());
+        return stringRedisTemplate.opsForValue().get(keyName);
     }
 
     /**
